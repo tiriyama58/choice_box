@@ -1,22 +1,35 @@
 "use client";
 
+import { useCallback } from "react";
 import { ChoiceForm } from "./ChoiceForm";
 import { ChoiceList } from "./ChoiceList";
 import { DrawSection } from "./DrawSection";
 import { useChoices } from "@/hooks/useChoices";
+import { useDrawHistory } from "@/hooks/useDrawHistory";
+import type { Choice } from "@/types/choice";
 
 export function ChoiceBoxApp() {
   const {
     choices,
-    lastDraw,
     loaded,
     storageError,
     addChoice,
     removeChoice,
     commitDraw,
   } = useChoices();
+  const {
+    history,
+    loaded: historyLoaded,
+    storageError: historyStorageError,
+    appendDraw,
+  } = useDrawHistory();
 
-  if (!loaded) {
+  const handleSpinComplete = useCallback((choice: Choice) => {
+    commitDraw(choice);
+    appendDraw(choice);
+  }, [appendDraw, commitDraw]);
+
+  if (!loaded || !historyLoaded) {
     return (
       <div className="app-shell">
         <p className="loading" role="status">読み込み中…</p>
@@ -33,7 +46,7 @@ export function ChoiceBoxApp() {
         </p>
       </header>
 
-      {storageError ? (
+      {storageError || historyStorageError ? (
         <p className="storage-error" role="alert">
           選択肢を保存できませんでした。ブラウザの設定やプライベートモードをご確認ください。
         </p>
@@ -50,8 +63,8 @@ export function ChoiceBoxApp() {
 
       <DrawSection
         choices={choices}
-        lastDraw={lastDraw}
-        onSpinComplete={commitDraw}
+        history={history}
+        onSpinComplete={handleSpinComplete}
       />
     </div>
   );

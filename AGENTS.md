@@ -12,3 +12,17 @@
 
 ## 完了報告
 - 変更内容、主な変更ファイル、検証結果、未解決の問題を簡潔に報告する。
+
+## デプロイルール
+- 本番デプロイは、main への push で quality と e2e が成功したあとの deploy_production だけが行う。
+- エージェントは CLI や Dashboard から本番デプロイしない。
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

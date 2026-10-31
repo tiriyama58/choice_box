@@ -1,0 +1,44 @@
+---
+description: レビューHTMLレポートのデザイン。重要度バッジ、コード比較、絞り込みを含む報告書を reports/ に作成するときに適用する。
+globs: reports/**/*.html
+alwaysApply: false
+---
+
+# レビューレポートのデザイン
+
+レビュー結果のHTMLは `reports/review-design-verification.html` と同じ見た目で作る。PCでの閲覧を前提にする。レビューレポートでは、汎用のHTMLレポートよりこのルールを優先する。
+
+## ファイル名
+- レビュー結果は `reports/<種類>-<対象>-YYYYMMDD.html` に保存する。
+- `YYYYMMDD` はレビュー実施日の日本時間で、区切り文字は入れない。
+- `<種類>` はレビューの種類を示す短い名前にする。`<対象>` は対象ファイルのリポジトリ相対パスで、ディレクトリ区切りと拡張子のピリオドはハイフンに替える。
+- 見本の `reports/review-design-verification.html` はこの命名の対象外であり、上書きしない。
+
+## 実装
+- 単一HTMLにする。CSSとJavaScriptはファイル内に書き、外部フォント・外部CSS・外部ライブラリは使わない。
+- 本文幅は `min(72rem, calc(100% - 3rem))`。
+- フォントは `-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif`。本文は `1rem`、`line-height: 1.6`。
+- コードは背景 `#f6f8fa`、フォント `Monaco, Consolas, monospace`。長い行は折り返す。
+- アニメーションや装飾は足さない。
+
+## 色
+- ページ背景 `#f4f5f7`、本文 `#2e3640`、見出し `#1e3a5f`、補助文字 `#5e6874`、アクセント `#1d4f91`。
+- カードは白、枠 `#e3e6eb`、角丸 `8px`、影 `0 1px 2px rgba(28, 36, 48, 0.06)`。
+- Critical は文字 `#9f2d2d`、背景 `#fdecec`。
+- Warning は文字 `#8a4b08`、背景 `#fff4e5`。
+- Info は文字 `#1d4f91`、背景 `#e8f1fb`。
+- Suggestion は文字 `#1f6b45`、背景 `#e8f6ee`。
+
+## 構成
+- ヘッダーにプロジェクト名、レビュー実施日時、総指摘件数、重大度別の内訳を置く。
+- 絞り込みは「すべて」「Critical」「Warning」「Info / Suggestion」の4つ。Suggestion は Info と同じ絞り込みに含める。
+- 各カードにバッジ、ファイル名と行番号、概要、詳細、問題のあるコード、改善後の提案、修正理由を置く。
+
+```html
+<button type="button" data-filter="info">Info / Suggestion</button>
+<article class="card" data-severity="info">
+  <span class="badge badge-suggestion">Suggestion</span>
+</article>
+```
+
+`data-severity` は `critical` / `warning` / `info` のいずれかにする。Suggestion のカードも `info` にする。
